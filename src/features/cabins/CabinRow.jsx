@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import {formatCurrency} from "../../utils/helpers"
+import { formatCurrency } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins";
-import Spinner from "../../ui/Spinner.jsx"
+import Spinner from "../../ui/Spinner.jsx";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import CreateCabinForm from "./CreateCabinForm.jsx";
 
 const TableRow = styled.div`
   display: grid;
@@ -44,37 +46,47 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-
-function CabinRow({cabin}) {
-
+function CabinRow({ cabin }) {
   const queryClient = useQueryClient();
+  const [showForm, setShowForm] = useState(false);
 
-  const {id, name, maxCapacity, regularPrice, discount, description, image} = cabin;
+  const { id, name, maxCapacity, regularPrice, discount, description, image } =
+    cabin;
 
-  const {isLoading: isDeleting, mutate} = useMutation({
+  const { isLoading: isDeleting, mutate } = useMutation({
     mutationFn: (id) => deleteCabin(id),
     onSuccess: () => {
-      toast.success("Cabin successfully deleted!")
+      toast.success("Cabin successfully deleted!");
       queryClient.invalidateQueries({
-        queryKey: ["cabins"]
+        queryKey: ["cabins"],
       });
     },
-    onError: err => toast.error(err.message)
-  })
+    onError: (err) => toast.error(err.message),
+  });
 
   // if(isDeleting) return <Spinner />
 
   return (
-    <TableRow role="row">
-      <Img src={image}/>
-      <Cabin>{name}</Cabin>
-      <div>Fit up to {maxCapacity} guests</div>
-      <Price>{formatCurrency(regularPrice)}</Price>
-      <Discount>{formatCurrency(discount)}</Discount>
-      <button onClick={() => mutate(id)} disabled={isDeleting}>Delete</button>
-      
-    </TableRow>
-  )
+    <>
+      <TableRow role="row">
+        <Img src={image} />
+        <Cabin>{name}</Cabin>
+        <div>Fit up to {maxCapacity} guests</div>
+        <Price>{formatCurrency(regularPrice)}</Price>
+        <Discount>{formatCurrency(discount)}</Discount>
+
+        <div>
+          <button onClick={(showForm) => setShowForm((showForm) => !showForm)}>
+            Update
+          </button>
+          <button onClick={() => mutate(id)} disabled={isDeleting}>
+            Delete
+          </button>
+        </div>
+      </TableRow>
+      {showForm && <CreateCabinForm cabinToEdit={cabin}/> }
+    </>
+  );
 }
 
-export default CabinRow
+export default CabinRow;

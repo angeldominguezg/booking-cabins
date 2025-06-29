@@ -20,20 +20,32 @@ export async function deleteCabin(id) {
   return data;
 }
 
-export async function createCabin(newCabin) {
-  // https://mmbmwaytrjwsfgarltjz.supabase.co/storage/v1/object/public/cabins-images//cabin-001.jpg
+export async function createEditCabin(newCabin, id) {
+
+  const hasImagenPath = newCabin.image?.startsWith?.(supabaseUrl);
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     "/",
     ""
   );
 
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabins-images//${imageName}`;
+  const imagePath = hasImagenPath
+    ? newCabin.image
+    : `${supabaseUrl}/storage/v1/object/public/cabins-images//${imageName}`;
 
-  // 1- Create the cabin
-  const { data, error } = await supabase
-    .from("cabins")
-    .insert([{...newCabin, image: imagePath}])
-    .select();
+  // 1- Create/edit the cabin
+  let query = supabase.from("cabins");
+
+  // A) Create Cabin
+  if (!id) {
+    query = query.insert([{ ...newCabin, image: imagePath }]);
+  }
+
+  // B) Update the Caibn
+  if (id) {
+    query = query.update({...newCabin, image: imagePath }).eq("id", id);
+  }
+
+  const {data, error} = await query.select();
 
   if (error) {
     console.error(error);
@@ -52,13 +64,9 @@ export async function createCabin(newCabin) {
     console.error(error);
     throw new Error("Cabin could not be created because a file error");
 
-  } else {
+  }
     // Handle success
     return data;
-
-  }
-
-  // return data;
 }
 
 export async function updateCabin() {}
