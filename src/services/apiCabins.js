@@ -53,6 +53,8 @@ export async function createEditCabin(newCabin, id) {
   }
 
   // 2- Is the creation ok then upload the cabin image.
+  if (hasImagenPath) return data;
+
   const { data: storageData, error: storageError } = await supabase.storage
     .from("cabins-images")
     .upload(imageName, newCabin.image);
