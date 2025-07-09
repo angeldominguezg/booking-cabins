@@ -8,7 +8,7 @@ export default function useOutsideClick(handlerClose, listenCapturing = true) {
   useEffect(() => {
     function handleClick(e) {
       if(ref.current && !ref.current.contains(e.target)) {
-        console.log("Click Outside!")
+        // console.log("Click Outside!")
         handlerClose();
       }
     }
@@ -16,7 +16,7 @@ export default function useOutsideClick(handlerClose, listenCapturing = true) {
     document.addEventListener('click', handleClick, listenCapturing);
 
     return () => {
-      console.log("Handle Click Removed!")
+      // console.log("Handle Click Removed!")
       document.removeEventListener('click', handleClick, listenCapturing);
     }
   }, [handlerClose, listenCapturing]);

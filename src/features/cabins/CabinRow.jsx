@@ -7,19 +7,7 @@ import Modal from "../../ui/Modal.jsx";
 import ConfirmDelete from "../../ui/ConfirmDelete.jsx";
 import useCreateCabin from "./useCreateCabin.js";
 import Spinner from "../../ui/Spinner.jsx";
-
-
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+import Table from "../../ui/Table.jsx";
 
 const Img = styled.img`
   display: block;
@@ -69,7 +57,7 @@ function CabinRow({ cabin }) {
   if(isCreating) return <Spinner />
 
   return (
-    <TableRow role="row">
+    <Table.Row>
       <Img src={image} />
       <Cabin>{name}</Cabin>
       <div>Fit up to {maxCapacity} guests</div>
@@ -110,11 +98,8 @@ function CabinRow({ cabin }) {
             />
           </Modal.Window>
         </Modal>
-        {/* <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
-          <HiTrash />
-        </button> */}
       </div>
-    </TableRow>
+    </Table.Row>
   );
 }
 
