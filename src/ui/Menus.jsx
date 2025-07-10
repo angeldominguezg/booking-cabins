@@ -1,6 +1,10 @@
+import { createContext, useContext, useState } from "react";
+import { createPortal } from "react-dom";
+import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
+import useOutsideClick from "../hooks/useOutsideClick";
 
-const StyledMenu = styled.div`
+const Menu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -60,3 +64,84 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+const MenusContext = createContext();
+
+function Menus({children}) {
+
+  const [openId, setOpenId] = useState(null);
+  const closeMenu = () => setOpenId(null);
+  const openMenu = (id) => setOpenId(id);
+
+  const [position, setPosition] = useState(null);
+
+
+  return (
+    <MenusContext.Provider value={{openId, closeMenu, openMenu, position, setPosition}}>
+      {children}
+    </MenusContext.Provider>
+  )
+}
+
+//TODO: Fix Toggle button, don hide the menu on the second click in the button.
+function Toggle({id}) {
+  const {openMenu, closeMenu, openId, setPosition} = useContext(MenusContext);
+
+  // check this function minute 12:42
+  function handleClick(e) {
+    e.stopPropagation();
+
+    const rect = e.target.closest("button").getBoundingClientRect();
+
+    setPosition({
+      x: window.innerWidth - rect.width - rect.x,
+      y: rect.y + rect.height + 8,
+    });
+
+    openId === null || openId !== id ? openMenu(id) : closeMenu();
+  }
+
+  return (
+    <StyledToggle onClick={handleClick}>
+      <HiEllipsisVertical />
+    </StyledToggle>
+  );
+}
+
+function List({ id, children }) {
+  const { openId, position, closeMenu } = useContext(MenusContext);
+  const ref = useOutsideClick(closeMenu);
+
+  if (openId !== id) return null;
+
+  return createPortal(
+    <StyledList position={position} ref={ref}>{children}</StyledList>,
+    document.body
+  )
+}
+
+function Button({children, icon, onClick}) {
+  const {closeMenu} = useContext(MenusContext);
+
+  function handleClick() {
+    onClick?.();
+    closeMenu();
+  }
+
+  return (
+    <li>
+      <StyledButton onClick={handleClick}>
+        {icon}
+        <span>{children}</span>
+      </StyledButton>
+    </li>
+  );
+}
+
+Menus.Menu = Menu;
+Menus.Toggle = Toggle;
+Menus.List = List;
+Menus.Button = Button;
+
+
+export default Menus

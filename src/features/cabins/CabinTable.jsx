@@ -3,6 +3,7 @@ import CabinRow from "./CabinRow";
 import useCabins from "./useCabins";
 import Spinner from "../../ui/Spinner";
 import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 
 // const Table = styled.div`
@@ -29,31 +30,35 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 
-
 function CabinTable() {
   const { isLoading, cabins } = useCabins();
 
   if (isLoading) return <Spinner />;
 
   return (
-    <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
-      <Table.Header>
-        <div></div>
-        <div>Cabin</div>
-        <div>Capacity</div>
-        <div>Price</div>
-        <div>Discount</div>
-        <div></div>
-      </Table.Header>
-      {/* <Table.Body>
+    <Menus>
+      <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
+        <Table.Header>
+          <div></div>
+          <div>Cabin</div>
+          <div>Capacity</div>
+          <div>Price</div>
+          <div>Discount</div>
+          <div></div>
+        </Table.Header>
+        {/* <Table.Body>
         {cabins.map((cabin) => (
           <CabinRow cabin={cabin} key={cabin.id} />
         ))}
       </Table.Body> */}
 
-      {/* Here I'll will apply the render props pattern */}
-      <Table.Body data={cabins} render={(cabin) => <CabinRow cabin={cabin} />} />
-    </Table>
+        {/* Here I'll will apply the render props pattern */}
+        <Table.Body
+          data={cabins}
+          render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
+        />
+      </Table>
+    </Menus>
   );
 }
 
