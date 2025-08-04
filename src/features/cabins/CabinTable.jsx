@@ -6,7 +6,6 @@ import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
 import { useSearchParams } from "react-router-dom";
 
-
 // const Table = styled.div`
 //   border: 1px solid var(--color-grey-200);
 
@@ -37,8 +36,9 @@ function CabinTable() {
 
   if (isLoading) return <Spinner />;
 
+  // 1) Filter Logic
   const filterValue = serchParams.get("discount") || "all";
-  console.log("CabinTable", filterValue);
+  // console.log("CabinTable", filterValue);
 
   let filteredCabins = cabins;
 
@@ -54,6 +54,33 @@ function CabinTable() {
     filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
   }
 
+  // 2) Sort Logic
+  const sortBy = serchParams.get("sortBy") || "startDate-asc";
+  console.log("CabinTable", sortBy.split("-"));
+
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+
+  console.log("filteredCabins", filteredCabins);
+
+  // Sort Without modifier
+  // const sortedCabins = filteredCabins.sort((a, b) => {
+  //   if (direction === 'asc') {
+  //     return a[field] > b[field] ? 1 : -1;
+  //   } else {
+  //     return a[field] < b[field] ? 1 : -1;
+  //   }
+  // })
+
+  // Sort With Modifier
+  const sortedCabins = filteredCabins
+    .slice()
+    .sort(
+      (a, b) =>
+        (typeof a[field] === "string"
+          ? a[field].localeCompare(b[field])
+          : a[field] - b[field]) * modifier
+    );
 
   return (
     <Menus>
@@ -74,7 +101,7 @@ function CabinTable() {
 
         {/* Here I'm applying the render props pattern */}
         <Table.Body
-          data={filteredCabins}
+          data={sortedCabins}
           render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
         />
       </Table>
