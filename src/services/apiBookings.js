@@ -1,18 +1,22 @@
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
-export async function getBookings() {
-  const { data, error } = await supabase
-    .from("bookings")
-    // .select("*");
-    .select("*, cabins(name), guests(fullName, email)");
+export async function getBookings({filter, sortBy}) {
+  let query = supabase.from("bookings").select("*, cabins(name), guests(fullName, email)");
 
-    if (error) {
-      console.error(error);
-      throw new Error("Bookings could not be loaded");
-    }
+  // Filters
+  if (filter !== null) {
+    query = query[filter.method || "eq"](filter.field, filter.value);
+  }
 
-    return data;
+  const { data, error } = await query;
+
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not be loaded");
+  }
+
+  return data;
 }
 
 export async function getBooking(id) {
