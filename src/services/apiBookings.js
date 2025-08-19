@@ -5,9 +5,23 @@ export async function getBookings({filter, sortBy}) {
   let query = supabase.from("bookings").select("*, cabins(name), guests(fullName, email)");
 
   // Filters
-  if (filter !== null) {
+  if (filter) {
     query = query[filter.method || "eq"](filter.field, filter.value);
   }
+
+  // Sorting
+  if (sortBy) {
+    console.log(sortBy);
+
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === 'asc'? true : false,
+    })
+
+    // query = query.order(sortBy.field, {
+    //   ascending: sortBy.value === "asc",
+    // });
+  }
+
 
   const { data, error } = await query;
 
