@@ -33,5 +33,5 @@ export default function useBookings() {
     queryFn: () => getBookings({filter, sortBy, page}),
   });
 
-  return { isLoading, bookings, error };
+  return { isLoading, bookings, count, error };
 }
