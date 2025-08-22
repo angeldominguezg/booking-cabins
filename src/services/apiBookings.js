@@ -11,7 +11,7 @@ export async function getBookings({filter, sortBy}) {
 
   // Sorting
   if (sortBy) {
-    console.log(sortBy);
+    // console.log(sortBy);
 
     query = query.order(sortBy.field, {
       ascending: sortBy.direction === 'asc'? true : false,
