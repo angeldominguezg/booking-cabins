@@ -19,14 +19,12 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-
-  const {booking, isLoading, error} = useBooking();
+  const {isLoading, booking, error} = useBooking();
+  const moveBack = useMoveBack();
 
   if (isLoading) return <Spinner />;
 
-  const {bookingId: id, status} = booking;
-
-  const moveBack = useMoveBack();
+  const {id, status} = booking;
 
   const statusToTagName = {
     unconfirmed: "blue",
