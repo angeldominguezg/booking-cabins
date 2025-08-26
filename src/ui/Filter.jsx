@@ -46,10 +46,7 @@ function Filter({ filterField, filterOptions }) {
     if (searchParams.get('page')) {
       searchParams.set('page', 1);
     }
-
-
     setSearchParams(searchParams);
-    // console.log("Click", value);
   }
 
   return (

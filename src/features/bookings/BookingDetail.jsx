@@ -11,9 +11,12 @@ import ButtonText from "../../ui/ButtonText";
 import { useMoveBack } from "../../hooks/useMoveBack";
 import useBooking from "./useBooking";
 import Spinner from "../../ui/Spinner";
-import { HiArrowDownOnSquare, HiArrowUpOnSquare } from "react-icons/hi2";
+import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiTrash } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { useCheckout } from "../check-in-out/useCheckOut";
+import useDeleteBooking from "./useDeleteBooking";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -26,10 +29,11 @@ function BookingDetail() {
   const moveBack = useMoveBack();
   const navigate = useNavigate();
   const {checkout, isCheckout} = useCheckout();
+  const { deleteBooking, isDeleting: isDeletingBooking } = useDeleteBooking();
 
 
 
-  if (isLoading) return <Spinner />;
+  if (isLoading || isDeletingBooking || isCheckout) return <Spinner />;
 
   const {id, status} = booking;
 
@@ -38,6 +42,11 @@ function BookingDetail() {
     "checked-in": "green",
     "checked-out": "silver",
   };
+
+    function handleDeleteBooking(id) {
+      deleteBooking(id, {onSuccess: () => navigate("/bookings")});
+    }
+
 
   return (
     <>
@@ -74,6 +83,26 @@ function BookingDetail() {
               Check Out
             </Button>
           }
+          <Modal>
+            <Modal.Open opens="delete">
+
+              <Button
+                variation="danger"
+                icon={<HiTrash />}
+                onClick={() => handleDeleteBooking(id)}
+                disabled={isDeletingBooking}
+              >
+                Delete
+              </Button>
+            </Modal.Open>
+            <Modal.Window name="delete">
+              <ConfirmDelete
+                resourceName="Booking"
+                onConfirm={() => handleDeleteBooking(id)}
+                disabled={isDeletingBooking}
+              />
+            </Modal.Window>
+          </Modal>
       </ButtonGroup>
     </>
   );
