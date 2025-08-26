@@ -13,7 +13,7 @@ import useBooking from "../bookings/useBooking";
 import Spinner from "../../ui/Spinner";
 import { useEffect, useState } from "react";
 import { formatCurrency } from "../../utils/helpers";
-import { useChecking } from "./useChecking";
+import { useCheckin } from "./useCheckin";
 import Checkbox from "../../ui/CheckBox";
 import useSettings from "../settings/useSettings";
 
@@ -35,7 +35,7 @@ function CheckinBooking() {
   useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
 
   const moveBack = useMoveBack();
-  const { checkin, isCheckin } = useChecking();
+  const { checkin, isCheckin } = useCheckin();
 
   if (isLoading || isLoadingSettings) {
     return <Spinner />;
