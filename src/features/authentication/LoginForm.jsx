@@ -18,7 +18,14 @@ function LoginForm() {
     if (!email || !password) return;
     console.log(email, password);
 
-    login({ email, password });
+    login({ email, password },
+      {
+        onSettled: () => {
+          setEmail("");
+          setPassword("");
+        }
+      }
+    );
   }
 
   return (
