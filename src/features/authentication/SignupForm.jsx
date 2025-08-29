@@ -3,17 +3,20 @@ import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
+import SpinnerMini from "../../ui/SpinnerMini";
+import { useSignup } from "./useSignUp";
 
 // Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
-  const { register, formState, getValues, handleSubmit } = useForm();
+  const { signup, isLoading, error } = useSignup();
+  const { register, formState, getValues, handleSubmit, reset } = useForm();
   const { errors } = formState;
 
-  function onSubmit(data) {
-    console.log("onSubmit", data);
+  function onSubmit({ fullName, email, password }) {
+    signup({ fullName, email, password }, { onSettled: () => reset() });
+    // console.log("onSubmit", {fullName, email, password});
   }
-
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -21,6 +24,7 @@ function SignupForm() {
         <Input
           type="text"
           id="fullName"
+          disabled={isLoading}
           {...register("fullName", { required: "Full name is required" })}
         />
       </FormRow>
@@ -39,10 +43,14 @@ function SignupForm() {
         />
       </FormRow>
 
-      <FormRow label="Password (min 8 characters)" error={errors?.password?.message}>
+      <FormRow
+        label="Password (min 8 characters)"
+        error={errors?.password?.message}
+      >
         <Input
           type="password"
           id="password"
+          disabled={isLoading}
           {...register("password", {
             required: "Password is required",
             minLengtht: {
@@ -57,19 +65,23 @@ function SignupForm() {
         <Input
           type="password"
           id="passwordConfirm"
+          disabled={isLoading}
           {...register("passwordConfirm", {
             required: "This field is required",
-            validate: (value) => value === getValues("password") || "Passwords do not match",
+            validate: (value) =>
+              value === getValues("password") || "Passwords do not match",
           })}
         />
       </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" disabled={isLoading}>
           Cancel
         </Button>
-        <Button>Create new user</Button>
+        <Button disabled={isLoading}>
+          {!isLoading ? "Create new user" : <SpinnerMini />}
+        </Button>
       </FormRow>
     </Form>
   );
