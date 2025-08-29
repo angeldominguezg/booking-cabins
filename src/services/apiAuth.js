@@ -1,11 +1,10 @@
-import supabase, { supabaseUrl }  from "./supabase";
-
+import supabase, { supabaseUrl } from "./supabase";
 
 export async function signup({ fullName, email, password }) {
-  const {data, error} = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { fullName, avatar: '' } },
+    options: { data: { fullName, avatar: "" } },
   });
 
   if (error) throw new Error(error.message);
@@ -39,22 +38,21 @@ export async function getCurrentUser() {
   return data?.user;
 }
 
-
 export async function logout() {
   const { error } = await supabase.auth.signOut();
-  if(error) throw new Error(error.message);
+  if (error) throw new Error(error.message);
 }
 
-export async function updateCurrentUser({password, fullName, avatar}) {
+export async function updateCurrentUser({ password, fullName, avatar }) {
   // 1.- Update Password Or fullName.
   let updateData;
-  if (password) updateData = {password};
-  if (fullName) updateData = {data: {fullName}};
+  if (password) updateData = { password };
+  if (fullName) updateData = { data: { fullName } };
 
-  const {data, error} = await supabase.auth.updateUser(updateData);
+  const { data, error } = await supabase.auth.updateUser(updateData);
 
   if (error) throw new Error(error.message);
-  if(!avatar) return data;
+  if (!avatar) return data;
 
   // 2.- Upload the avatar Image.
   const fileName = `avatar-${data.user.id}-${Math.random()}`;
@@ -64,17 +62,16 @@ export async function updateCurrentUser({password, fullName, avatar}) {
 
   if (storageError) throw new Error(storageError.message);
 
-
   // 3.- Update the avatar in the user.
   let updatedAvatarData = {
     data: {
       avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
     },
   };
-  const {data: updateUser, error: updateAvatarError} = await supabase.auth.updateUser(updatedAvatarData);
+  const { data: updateUser, error: updateAvatarError } =
+    await supabase.auth.updateUser(updatedAvatarData);
 
-  if(updateAvatarError) throw new Error(updateAvatarError.message);
+  if (updateAvatarError) throw new Error(updateAvatarError.message);
 
   return updateUser;
 }
-
