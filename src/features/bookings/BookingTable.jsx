@@ -6,7 +6,6 @@ import Spinner from "../../ui/Spinner";
 import Empty from "../../ui/Empty";
 import Pagination from "../../ui/Pagination";
 
-
 function BookingTable() {
   // const bookings = [];
   const {isLoading, bookings, count, error} = useBookings();
