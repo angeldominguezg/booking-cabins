@@ -6,7 +6,7 @@ import Heading from "../../ui/Heading";
 import ButtonGroup from "../../ui/ButtonGroup";
 import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
-import CheckBox from "../../ui/CheckBox";
+import Checkbox from "../../ui/Checkbox";
 
 import { useMoveBack } from "../../hooks/useMoveBack";
 import useBooking from "../bookings/useBooking";
@@ -14,7 +14,6 @@ import Spinner from "../../ui/Spinner";
 import { useEffect, useState } from "react";
 import { formatCurrency } from "../../utils/helpers";
 import { useCheckin } from "./useCheckin";
-import Checkbox from "../../ui/CheckBox";
 import useSettings from "../settings/useSettings";
 
 const Box = styled.div`
@@ -92,7 +91,7 @@ function CheckinBooking() {
       )}
 
       <Box>
-        <CheckBox
+        <Checkbox
           id="confirm"
           checked={confirmPaid}
           onChange={() => setConfirmPaid((confirm) => !confirm)}
@@ -104,7 +103,7 @@ function CheckinBooking() {
             : `${formatCurrency(
                 totalPrice + optionalBreakfastPrice
               )} (${formatCurrency(totalPrice)} + ${formatCurrency(optionalBreakfastPrice)})`}
-        </CheckBox>
+        </Checkbox>
       </Box>
 
       <ButtonGroup>
