@@ -18,8 +18,7 @@ function Siderbar() {
     <StyledAside>
       <Logo /> 
       <MainNav />
-      
-      <Uploader />
+      {/* <Uploader /> */}
     </StyledAside>
   );
 }
