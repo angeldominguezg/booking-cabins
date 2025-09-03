@@ -9,12 +9,12 @@ function Stats({ bookings, confirmedStays, numDays, numCabins }) {
   const numberOgbookigns = bookings.length;
 
   // 2- Sales
-  const sales = confirmedStays.reduce((acc, stay) => {
+  const sales = confirmedStays?.reduce((acc, stay) => {
     return acc + stay.totalPrice;
   }, 0);
 
   //check ins
-  const checkIns = confirmedStays.length;
+  const checkIns = confirmedStays?.length;
 
   //occupancy rate
   const occupancyRate = confirmedStays?.reduce((acc, cur) => {

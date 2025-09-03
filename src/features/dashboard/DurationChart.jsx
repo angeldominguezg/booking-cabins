@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Heading from "../../ui/Heading";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { useDarkMode } from "../../context/DarkModeContext";
+import Spinner from "../../ui/Spinner";
 
 
 const ChartBox = styled.div`
@@ -135,11 +136,11 @@ function prepareData(startData, stays) {
   return data;
 }
 
-function DurationChart({ confirmedStays }) {
+function DurationChart({ confirmedStays = [] }) {
   const {isDarkMode} = useDarkMode();
   const startData = isDarkMode ? startDataDark : startDataLight;
-  const data = prepareData(startData, confirmedStays);
 
+  const data = prepareData(startData, confirmedStays);
 
   return (
     <ChartBox>
