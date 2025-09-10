@@ -53,7 +53,7 @@ function SignupForm() {
           disabled={isLoading}
           {...register("password", {
             required: "Password is required",
-            minLengtht: {
+            minLength: {
               value: 8,
               message: "Password must be at least 8 characters",
             },
